@@ -75,7 +75,7 @@ Afterwards, I started using RStudio to prepare, clean and analyze the data.
 ### Prepare data
 The first step was to download required packages
 
-```
+``` r
 install.packages("tidyverse")
 installed.packages
 install.packages("ggplot2")
@@ -87,7 +87,7 @@ library(tidyverse)
 
 Then I imported the files to R:
 
-``` 
+``` r
 # Upload Divvy datasets (csv files):
 m_202010 <- read.csv("202010-divvy-tripdata.csv")
 m_202011 <- read.csv("202011-divvy-tripdata.csv")
@@ -105,7 +105,7 @@ m_202109 <- read.csv("202109-divvy-tripdata.csv")
 ### Merge data
 I used the colnames() function to view and compare the columns of each file to make sure they match before combining them into a single file. 
 
-```
+``` r
 # Compare column names of each file
 colnames(m_202010)
 colnames(m_202011)
@@ -122,7 +122,7 @@ colnames(m_202109)
 ```
 I noticed the column names of all datasets are matching. Then I used str() function to see if the values on columns are formatted with the correct data type.
 
-```
+``` r
 # Inspect the data frames and look for incongruencies
 str(m_202010)
 str(m_202011)
@@ -140,7 +140,7 @@ str(m_202109)
 
 I noticed the start_station_id and end_station_id columns of the tables m_202010 and m_202011 are formatted as integers while they are formatted as characters in all of the other tables. I needed to change them to character format to make these columns consistent when merging the tables into a single file.
 
-```
+``` r
 # Convert start_station_id and end_station_id to character so that they can stack correctly
 m_202010 <- mutate(m_202010, 
                    start_station_id = as.character(start_station_id), 
@@ -152,14 +152,14 @@ m_202011 <- mutate(m_202011,
 
 Then, I combined all files into a single file to aggregate last 12 months trip data to conduct my analysis.
 
-```
+``` r
 # Stack individual quarter's data frames into one big data frame
 all_trips <- bind_rows(m_202010, m_202011, m_202012, m_202101, m_202102, m_202103, m_202104, m_202105, m_202106, m_202107, m_202108, m_202109)
 ```
 
 To inspect the new table that has been created, I ran these codes.
 
-```
+``` r
 nrow(all_trips)  #How many rows are in the data frame?
 dim(all_trips)  #Dimensions of the data frame?
 head(all_trips)  #See the first 6 rows of the data frame. 
@@ -171,14 +171,14 @@ The new table which I used for my analysis has 13 columns and 5136261 rows.
 
 To ensure that member_casual column has only two types of labels for customers I ran this code.
 
-```
+``` r
 # Identify how many observations fall under each usertype
 table(all_trips$member_casual)
 ```
 
 The output is:
 		
-```
+``` 
   casual  member 
   2358287 2777974
 ```
@@ -187,7 +187,7 @@ The output is:
 
 I added some additional columns of data -- such as day, month, year of each ride-- that provide additional opportunities to aggregate the data. 
 
-```
+``` r
 # Add columns that list the date, month, day, and year of each ride
 all_trips$date <- as.Date(all_trips$started_at)
 all_trips$month <- format(as.Date(all_trips$date), "%b")
@@ -200,14 +200,14 @@ all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
 
 To calculate the ride duration, I added a column named ride_length which is calculated by subtracting started_at from ended_at.
 
-```
+``` r
 # Add a "ride_length" calculation to all_trips (in seconds)
 all_trips$ride_length <- difftime(all_trips$ended_at, all_trips$started_at)
 ```
 
 To run calculations on the data, I converted "ride_length" to numeric data type.
 
-```
+``` r
 # Convert "ride_length" to numeric
 all_trips$ride_length <- as.numeric(as.character(all_trips$ride_length))
 is.numeric(all_trips$ride_length)
@@ -217,7 +217,7 @@ is.numeric(all_trips$ride_length)
 
 There were some rides where ride_length showed up as negative, including several hundred rides where Divvy took bikes out of circulation for testing reasons which were recorded as “WATSON TESTING - DIVVY” under the “start_station_name” column. I deleted these rides by creating a new version of the dataframe. (4083 rows were deleted)
 
-```
+``` r
 # Create a new version of the dataframe (v2) since data is being removed
 all_trips_v2 <- all_trips[!(all_trips$start_station_name == "WATSON TESTING - DIVVY" | all_trips$ride_length < 0),]
 ```
@@ -228,7 +228,7 @@ all_trips_v2 <- all_trips[!(all_trips$start_station_name == "WATSON TESTING - DI
 
 Ran summary() function to get the minimum, maximum, average and median of ride_length
 
-```
+``` r
 # Descriptive analysis on ride_length (all figures in seconds)
 summary(all_trips_v2$ride_length)
 ```
@@ -241,7 +241,7 @@ So the average ride length is 1365 seconds. Maximum ride length is 3356649 secon
 
 Then, I calculated the average ride length(in seconds) for each user type.
 
-```
+``` r
 # Average ride length for each user type
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = mean)
 ```
@@ -254,7 +254,7 @@ The average ride length for casual members is 1971.0341 seconds; while it is 850
 
 I calculated the median of ride length(in seconds) values for each user type.
 
-```
+``` r
 # Median of ride length values for each user type
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = median)
 ```
@@ -267,7 +267,7 @@ The median of ride length for casual members is 1001 seconds; while it is 605 se
 
 I calculated the minimum and maximum of ride length values for each user type.
 
-```
+``` r
 # Minimum ride length for each user type
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)
 ```
@@ -276,7 +276,7 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)
                      casual              	  	  0
                      member                	  	  0
 ```
-```
+``` r
 # Maximum ride length for each user type
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)
 ```  
@@ -290,13 +290,13 @@ The minimum ride lengths for both user types are 0 seconds; while the maximum ri
 ### Average ride length by weekday
 I wanted to calculate the average ride length by each day for each user type. First, I made sure the days were correctly ordered.
 
-```
+``` r
 # Order the days of week.
 all_trips_v2$day_of_week <- ordered(all_trips_v2$day_of_week, levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
 ```
 I calculated the average ride length by each day of week for each user type. 
 
-```
+``` r
 # See the average ride time by each day for members vs casual users
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
 ```
@@ -322,14 +322,14 @@ The output:
 ### Average ride length by month
 First, I ordered the months from October 2020 to September 2021 to visualize the findings chronologically.
 
-```
+``` r
 # Order the months by starting from October
 all_trips_v2$month <- ordered(all_trips_v2$month, levels=c("Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"))
 ```
 
 I calculated the average ride length by each day of week for each user type. 
 
-```
+``` r
 # See the average ride time by each month for members vs casual users
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$month, FUN = mean)
 ```
@@ -366,7 +366,7 @@ The output:
 ### Number of rides and ride length for each day of week and user type
 Finally, I wanted to see the number of rides and average ride_length by each day and user type. To do this, I created a weekday field using wday(), grouped the output by user type and weekday and used summarise() to match the number of rides and average ride length to these groups. Finally I sorted the data frame by user type and weekday.
 
-```
+``` r
 # analyze ridership data by type and weekday
 all_trips_v2 %>% 
   mutate(weekday = wday(started_at, label = TRUE)) %>% 
@@ -401,7 +401,7 @@ The output:
 ### Chart #1: Number of rides by weekday
 I used a bar chart to visualize the number of rides by weekday for each user type.
 
-```
+``` r
 # number of rides by weekday
 all_trips_v2 %>% 
   mutate(weekday = wday(started_at, label = TRUE)) %>% 
@@ -410,10 +410,10 @@ all_trips_v2 %>%
             ,average_duration_sec = mean(ride_length)) %>% 
   arrange(member_casual, weekday)  %>% 
   ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
-  geom_col(position = "dodge") + 
+  geom_col(position = "dodge", width = 0.6) + 
   labs(title = "Total Number of Rides by Weekday", subtitle = "From October 2020 to September 2021")
 ```
-![Total Number of Rides by Weekday](https://user-images.githubusercontent.com/93592015/140807407-c6ea4d08-49c2-4d12-8764-9238e98fb34c.png)
+![Total Number of Rides by Weekday](https://user-images.githubusercontent.com/93592015/140815346-5860ec31-8676-43c0-ab77-6d0f9aaff0b8.png)
 
 As we can see, casual members tend to use cyclistic bikes more on weekends while the number of rides by annual members for each day of week are very close.
 
@@ -421,7 +421,7 @@ As we can see, casual members tend to use cyclistic bikes more on weekends while
 
 I used a bar chart to visualize the average ride length by weekday for each user type.
 
-```
+``` r
 # average ride length by weekday
 all_trips_v2 %>% 
   mutate(weekday = wday(started_at, label = TRUE)) %>% 
@@ -430,10 +430,10 @@ all_trips_v2 %>%
             ,average_duration_sec = mean(ride_length)) %>% 
   arrange(member_casual, weekday)  %>% 
   ggplot(aes(x = weekday, y = average_duration_sec, fill = member_casual)) +
-  geom_col(position = "dodge") + 
+  geom_col(position = "dodge", width = 0.6) + 
   labs(title = "Average Ride Length for Each Weekday", subtitle = "From October 2020 to September 2021")
 ```
-![Average Ride Length by Weekday_2](https://user-images.githubusercontent.com/93592015/140809336-4a0c9e16-a833-4b28-8e5e-745967cb58f9.png)
+![Average Ride Length by Weekday](https://user-images.githubusercontent.com/93592015/140815375-02e1fdc8-bbcf-4f24-8067-6a7b05929bfe.png)
 
 Casual riders have a tendency of taking longer trips than annual members. Members take consistent rides throughout the week.
 
@@ -441,7 +441,7 @@ Casual riders have a tendency of taking longer trips than annual members. Member
 
 I compared the number of rides by month per each user type over the period of October 2020 to September 2021.
 
-```
+``` r
 # number of rides by month
 all_trips_v2 %>% 
   group_by(member_casual, month) %>% 
@@ -460,7 +460,7 @@ Number of rides per month for each user type follows a similar trend which state
 
 I compared the average ride length by month per each user type over the period of October 2020 to September 2021
 
-```
+``` r
 # average ride length by month
 all_trips_v2 %>% 
   group_by(member_casual, month) %>% 
