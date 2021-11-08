@@ -449,10 +449,10 @@ all_trips_v2 %>%
             ,average_duration_sec = mean(ride_length)) %>% 
   arrange(member_casual, month)  %>% 
   ggplot(aes(x = month, y = number_of_rides, color = member_casual, group = member_casual)) +
-  geom_line(size = 1) + 
+  geom_line(size = 1.2) + 
   labs(title = "Total Number of Rides by Month", subtitle = "From October 2020 to September 2021")
 ```
-![Total Number of Rides by Month](https://user-images.githubusercontent.com/93592015/140809370-bf72f35b-fcfb-428a-a866-9e8fb59cc459.png)
+![Total Number of Rides by Month](https://user-images.githubusercontent.com/93592015/140816473-1311de31-9ee0-4c57-8a90-6cf0af098074.png)
 
 Number of rides per month for each user type follows a similar trend which states a higher number of rides for summer than winter. 
 
@@ -468,10 +468,10 @@ all_trips_v2 %>%
             ,average_duration_sec = mean(ride_length)) %>% 
   arrange(member_casual, month)  %>% 
   ggplot(aes(x = month, y = average_duration_sec, group = member_casual, color = member_casual)) +
-  geom_line(size = 1) + 
+  geom_line(size = 1.2) + 
   labs(title = "Average Ride Length by Month", subtitle = "From October 2020 to September 2021")
 ```
-![Average Ride Length by Month (2)](https://user-images.githubusercontent.com/93592015/140809390-0bb693d5-81e3-4af8-9025-6aa707d12a53.png)
+![Average Ride Length by Month](https://user-images.githubusercontent.com/93592015/140816489-c35d3873-b952-45bf-a1ee-ac819d99bcc9.png)
 
 We can see the casual members tend to take longer trips than annual members.
 
