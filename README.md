@@ -247,7 +247,7 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = mean)
 ```
 ```
         all_trips_v2$member_casual    all_trips_v2$ride_length
-                     casual              	  	  1971.0341
+                     casual              	    1971.0341
                      member                	     850.0557
 ```
 The average ride length for casual members is 1971.0341 seconds; while it is 850.0557 seconds for annual members.
@@ -260,7 +260,7 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = median)
 ```
 ```
             all_trips_v2$member_casual   all_trips_v2$ride_length
-                     casual              	  	  1001
+                     casual              	    1001
                      member                	     605
 ```
 The median of ride length for casual members is 1001 seconds; while it is 605 seconds for annual members.
@@ -273,7 +273,7 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)
 ```
 ```
            all_trips_v2$member_casual   all_trips_v2$ride_length
-                     casual              	  	  	0
+                     casual              	  	  0
                      member                	  	  0
 ```
 ```
@@ -282,7 +282,7 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)
 ```  
 ```
             all_trips_v2$member_casual   all_trips_v2$ride_length
-                     casual              	  	  3356649
+                     casual              	    3356649
                      member                	     573467
 ```
 The minimum ride lengths for both user types are 0 seconds; while the maximum ride length for casual members is 3356649 seconds and 573467 seconds for annual members.
@@ -340,18 +340,18 @@ The output:
 1                      casual                	  Oct                	  1823.8245
 2                      member               	  Oct                	   842.9632
 3                      casual               	  Nov               	  1911.3579
-4                      member             	    Nov                    815.3079
+4                      member             	  Nov                      815.3079
 5                      casual               	  Dec                	  1610.9764
-6                      member              	    Dec               	   764.9615
+6                      member              	  Dec               	   764.9615
 7                      casual               	  Jan               	  1541.0754
-8                      member               	  Jan              	     772.3387
-9                      casual              	    Feb              	    2962.3937
-10                     member                	  Feb             	    1081.3251
-11                     casual                	  Mar             	    2289.5511
+8                      member               	  Jan              	   772.3387
+9                      casual              	  Feb              	  2962.3937
+10                     member                	  Feb             	  1081.3251
+11                     casual                	  Mar             	  2289.5511
 12                     member                	  Mar               	   838.2031
 13                     casual                	  Apr               	  2281.3794
-14                     member              	    Apr                    881.3527
-15                     casual                	  May              	    2293.8580
+14                     member              	  Apr                      881.3527
+15                     casual                	  May              	  2293.8580
 16                     member                	  May                	   878.3410
 17                     casual               	  Jun               	  2227.3044
 18                     member                	  Jun                	   880.6729
@@ -360,7 +360,7 @@ The output:
 21                     casual                	  Aug                	  1727.2208
 22                     member                	  Aug               	   846.0936
 23                     casual                	  Sep               	  1668.9319
-24                     member                	  Sep              	     824.1358
+24                     member                	  Sep              	   824.1358
 ```
 
 ### Number of rides and ride length for each day of week and user type
@@ -381,21 +381,21 @@ The output:
 # A tibble: 14 x 4
 # Groups:   member_casual [2]
    member_casual   weekday      number_of_rides   average_duration_sec
-   <chr>            <ord>              <int>            	<dbl>
- 1 casual       		 Sun              444948            	2284.
- 2 casual       		 Mon              266291            	1954.
- 3 casual      		   Tue              251312              1761.
- 4 casual        		 Wed              257055              1719.
- 5 casual       		 Thu              274473              1704.
- 6 casual        		 Fri              338975              1884.
- 7 casual        		 Sat              523672            	2135.
- 8 member          	 Sun              345060             	 963.
- 9 member        	   Mon              375679             	 821.
-10 member        	   Tue              406667             	 800.
-11 member        	   Wed              422575               804.
-12 member        	   Thu              420318             	 798.
-13 member        	   Fri              405266             	 841.
-14 member        	   Sat              399887             	 944.
+   <chr>            <ord>              <int>            <dbl>
+ 1 casual            Sun              444948            2284.
+ 2 casual            Mon              266291            1954.
+ 3 casual      	     Tue              251312            1761.
+ 4 casual            Wed              257055            1719.
+ 5 casual            Thu              274473            1704.
+ 6 casual            Fri              338975            1884.
+ 7 casual            Sat              523672            2135.
+ 8 member            Sun              345060             963.
+ 9 member            Mon              375679             821.
+10 member            Tue              406667             800.
+11 member            Wed              422575             804.
+12 member            Thu              420318             798.
+13 member            Fri              405266             841.
+14 member            Sat              399887             944.
 ```
 
 ### Chart #1: Number of rides by weekday
@@ -416,9 +416,12 @@ all_trips_v2 %>%
 ![Total Number of Rides by Weekday](https://user-images.githubusercontent.com/93592015/140807407-c6ea4d08-49c2-4d12-8764-9238e98fb34c.png)
 
 As we can see, casual members tend to use cyclistic bikes more on weekends while the number of rides by annual members for each day of week are very close.
-Chart #2: Average ride length by weekday for each user type
+
+### Chart #2: Average ride length by weekday for each user type
+
 I used a bar chart to visualize the average ride length by weekday for each user type.
 
+```
 # average ride length by weekday
 all_trips_v2 %>% 
   mutate(weekday = wday(started_at, label = TRUE)) %>% 
@@ -429,11 +432,16 @@ all_trips_v2 %>%
   ggplot(aes(x = weekday, y = average_duration_sec, fill = member_casual)) +
   geom_col(position = "dodge") + 
   labs(title = "Average Ride Length for Each Weekday", subtitle = "From October 2020 to September 2021")
-
+```
+![Average Ride Length by Weekday_2](https://user-images.githubusercontent.com/93592015/140809336-4a0c9e16-a833-4b28-8e5e-745967cb58f9.png)
 
 Casual riders have a tendency of taking longer trips than annual members. Members take consistent rides throughout the week.
-Chart #3: Number of rides by month for each user type
+
+### Chart #3: Number of rides by month for each user type
+
 I compared the number of rides by month per each user type over the period of October 2020 to September 2021.
+
+```
 # number of rides by month
 all_trips_v2 %>% 
   group_by(member_casual, month) %>% 
@@ -443,10 +451,16 @@ all_trips_v2 %>%
   ggplot(aes(x = month, y = number_of_rides, color = member_casual, group = member_casual)) +
   geom_line(size = 1) + 
   labs(title = "Total Number of Rides by Month", subtitle = "From October 2020 to September 2021")
+```
+![Total Number of Rides by Month](https://user-images.githubusercontent.com/93592015/140809370-bf72f35b-fcfb-428a-a866-9e8fb59cc459.png)
 
 Number of rides per month for each user type follows a similar trend which states a higher number of rides for summer than winter. 
-Chart #4: Average ride length by month
+
+### Chart #4: Average ride length by month
+
 I compared the average ride length by month per each user type over the period of October 2020 to September 2021
+
+```
 # average ride length by month
 all_trips_v2 %>% 
   group_by(member_casual, month) %>% 
@@ -456,14 +470,25 @@ all_trips_v2 %>%
   ggplot(aes(x = month, y = average_duration_sec, group = member_casual, color = member_casual)) +
   geom_line(size = 1) + 
   labs(title = "Average Ride Length by Month", subtitle = "From October 2020 to September 2021")
+```
+![Average Ride Length by Month (2)](https://user-images.githubusercontent.com/93592015/140809390-0bb693d5-81e3-4af8-9025-6aa707d12a53.png)
 
 We can see the casual members tend to take longer trips than annual members.
-Recommendations
-Recommendation #1
+
+## Recommendations
+
+### Recommendation #1
+
 Based on the second and fourth chart, we can say the casual riders tend to have longer rides than the annual members. To convert them into annual members, offering bonuses and rewards for members with long trips should be considered.
-Recommendation #2
+
+### Recommendation #2
+
 Chart # 3 demonstrates that the demand for Cyclistic bike service rises from the bottom to the top from winter to summer respectively. New member acquisition efforts could be maximized during summer months.
-Recommendation #3
+
+### Recommendation #3
+
 As chart #1 demonstrates that the casual riders have a tendency to use the Cyclistic services more on the weekend, organizing special events such as guided tours and contests for Cyclistic members which would take place on weekends could be a strong incentive for casual riders to become annual members. 
-Recommendation #4
+
+### Recommendation #4
+
 As chart #1 demonstrates that while the casual riders have a tendency to use the Cyclistic services more on the weekend, the annual members are using the bikes on weekdays, probably as a commuting vehicle. There can be marketing activities such as ads about using Cyclistic bikes for commuting in order to give the casual riders an incentive for going to their jobs with cyclistic bikes.
