@@ -77,7 +77,6 @@ The first step was to download required packages
 
 ``` r
 install.packages("tidyverse")
-installed.packages
 install.packages("ggplot2")
 install.packages("lubridate")
 library(lubridate)
